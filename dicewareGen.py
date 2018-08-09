@@ -17,28 +17,31 @@ def begin():
                 but I absolutly draw the line at 100."""
     )
     parser.add_argument(
+        "-v",
         "--verbose",
         help="output password with fancy presentation",
         action="store_true"
     )
     args = parser.parse_args()
-
-    if not 0 <= args.words <= 100:
+    
+    word_count = 6
+    
+    if args.words is not None:
+        word_count = args.words
+        
+    if not 0 <= word_count <= 100:
         print("\nError: -w [Integer] must be in range of 0 to 100 inclusive\n")
         return
-
-    word_count = args.words
     
     password = gen_password(word_count)
 
-    if args.verbose:
-        print("Diceware generated password:\n")
-
-    print("\t %s" % password)
+    print("\n    PASSWORD\t: %s" % password)
 
     if args.verbose:
-        print("\nWord count\t: %d" % word_count)
-        print("Character count\t: %d" % len(password))
+        print("    WORD COUNT\t: %d" % word_count)
+        print("    CHAR COUNT\t: %d (including spaces)" % len(password))
+    
+    print("")
     
 
 # ----------------------------------------
