@@ -3,48 +3,50 @@ from random import randint
 import argparse
 
 wordList = {}
+default_word_count = 6
+
 
 def begin():
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(    
-        "-w",
-        "--words", 
-        type = int,
-        help = """Specify the number of words in the password. 
-                Must be in range of 0 to 100 inclusive, because
-                ... well anything more than 10 words is ridiculous,
-                but I absolutly draw the line at 100."""
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        help="output password with fancy presentation",
-        action="store_true"
-    )
-    args = parser.parse_args()
-    
-    word_count = 6
-    
-    if args.words is not None:
-        word_count = args.words
-        
-    if not 0 <= word_count <= 100:
-        print("\nError: -w [Integer] must be in range of 0 to 100 inclusive\n")
-        return
-    
-    password = gen_password(word_count)
+    args = parse_arguments()
+
+    password = gen_password(args.word_count)
 
     print("\n    PASSWORD\t: %s" % password)
 
     if args.verbose:
-        print("    WORD COUNT\t: %d" % word_count)
+        print("    WORD COUNT\t: %d" % args.word_count)
         print("    CHAR COUNT\t: %d (including spaces)" % len(password))
-    
-    print("")
-    
 
-# ----------------------------------------
+    print("")
+
+
+def parse_arguments():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-w",
+        "--word-count",
+        type=int,
+        help="""Specify the number of words in the password
+                in range of 1 to 100 inclusive."""
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        help="Output password with fancy presentation.",
+        action="store_true"
+    )
+    args = parser.parse_args()
+
+    if args.word_count is None:
+        args.word_count = default_word_count
+    elif not 0 < args.word_count <= 100:
+        fatal_error(
+            "-w|--word-count [Integer] must be in range of 1 to 100 inclusive")
+
+    return args
+
 
 def gen_password(word_count):
 
@@ -52,29 +54,32 @@ def gen_password(word_count):
 
     read_list()
 
-    for _ in range(0,word_count):
-        wordNumber = str(randint(1,6))
-        wordNumber += str(randint(1,6))
-        wordNumber += str(randint(1,6))
-        wordNumber += str(randint(1,6))
-        wordNumber += str(randint(1,6))
+    for _ in range(0, word_count):
+        wordNumber = str(randint(1, 6))
+        wordNumber += str(randint(1, 6))
+        wordNumber += str(randint(1, 6))
+        wordNumber += str(randint(1, 6))
+        wordNumber += str(randint(1, 6))
         password += wordList[wordNumber]
-    return password.replace('\n',' ').strip(' ')
+    return password.replace('\n', ' ').strip(' ')
 
-# ----------------------------------------
 
 def read_list():
 
     try:
-        f = open('dicewords.txt','r')
+        f = open('dicewords.txt', 'r')
         for line in f:
-            k,w = line.split('\t')
+            k, w = line.split('\t')
             wordList[k] = w
         f.close()
     except OSError:
-        print("Error: dicewords.txt not found. Make sure it is in this directory.")
+        fatal_error(
+            "dicewords.txt not found. Make sure it is in this directory.")
 
-# ----------------------------------------
+
+def fatal_error(error_message):
+    print("Error: %s" % error_message)
+    quit()
 
 if __name__ == '__main__':
     begin()
