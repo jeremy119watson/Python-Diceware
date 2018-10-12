@@ -12,13 +12,12 @@ def begin():
 
     password = gen_password(args.word_count)
 
-    print("\n    PASSWORD\t: %s" % password)
-
     if args.verbose:
-        print("    WORD COUNT\t: %d" % args.word_count)
-        print("    CHAR COUNT\t: %d (including spaces)" % len(password))
-
-    print("")
+        print("PASSWORD\t: %s" % password)
+        print("WORD COUNT\t: %d" % args.word_count)
+        print("CHAR COUNT\t: %d (including spaces)" % len(password))
+    else:
+        print(password)
 
 
 def parse_arguments():
