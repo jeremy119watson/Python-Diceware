@@ -1,4 +1,4 @@
-# dicewareGen
+# Python-Diceware
 
 A python program to generate passwords(passphrases) using the [Diceware](http://world.std.com/%7Ereinhold/diceware.html) method.
 
